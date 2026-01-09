@@ -1,18 +1,24 @@
 import * as S from './styles'
 
-import { Produto } from '../../App'
+import { CartItem } from '../../features/cart/cartSlice'
+import { Produto } from '../../types/Produto'
 
 import cesta from '../../assets/cesta.png'
 import { paraReal } from '../Produto'
 
 type Props = {
-  itensNoCarrinho: Produto[]
+  itensNoCarrinho: CartItem[]
   favoritos: Produto[]
 }
 
 const Header = ({ itensNoCarrinho, favoritos }: Props) => {
+  const quantidadeTotal = itensNoCarrinho.reduce((acc, item) => {
+    acc += item.quantidade
+    return acc
+  }, 0)
+
   const valorTotal = itensNoCarrinho.reduce((acc, item) => {
-    acc += item.preco
+    acc += item.produto.preco * item.quantidade
     return acc
   }, 0)
 
@@ -23,7 +29,7 @@ const Header = ({ itensNoCarrinho, favoritos }: Props) => {
         <span>{favoritos.length} favoritos</span>
         <img src={cesta} />
         <span>
-          {itensNoCarrinho.length} itens, valor total: {paraReal(valorTotal)}
+          {quantidadeTotal} itens, valor total: {paraReal(valorTotal)}
         </span>
       </div>
     </S.Header>
